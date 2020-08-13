@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="209dp"
+        android:layout_height="260dp"
+       android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/shoe"></androidx.appcompat.widget.AppCompatImageView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Runner"
+        android:textSize="40dp"
+        android:textStyle="bold|italic"
+        android:textColor="#000000"
+        android:layout_gravity="center"></TextView>
+
+    <EditText
+        android:id="@+id/editText_email_input"
+        android:layout_width="310dp"
+        android:layout_height="wrap_content"
+       android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:hint="이메일 주소"
+        android:inputType="text"
+        android:overScrollMode="always"
+        android:scrollbarStyle="insideInset"
+        android:scrollbars="horizontal"></EditText>
+
+    <EditText
+        android:id="@+id/editText_password_input"
+        android:layout_width="312dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:hint="비밀번호"
+        android:inputType="textPassword"
+        android:overScrollMode="always"
+        android:scrollbarStyle="insideInset"
+        android:scrollbars="horizontal"></EditText>
+
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="300dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_background"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:text="로그인"></Button>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="29dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/qTV1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="계정이 없으신가요?  "
+            android:textColor="#000000"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/joinTV"
+            android:layout_width="98dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/button_background_white"
+            android:gravity="center"
+            android:text="회원가입"
+            android:textColor="#000000"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="31dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/qTV2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="비밀번호를 잊으셨나요?"
+            android:textColor="#000000"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/loginByTempPasswordTV"
+            android:layout_width="200dp"
+            android:layout_height="31dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/button_background_white"
+            android:gravity="center"
+            android:text="임시비밀번호로 로그인하기"
+            android:textColor="#000000"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+
+        <!--<Button
+            android:id="@+id/search_password"
+            android:layout_width="140dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/button_background"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:text="비밀번호 찾기"></Button>
+
+        <Button
+            android:id="@+id/sign_up"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/button_background"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:text="가입하기"></Button>-->
+
+</LinearLayout>

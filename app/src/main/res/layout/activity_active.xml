@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Active">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_signUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0E4775"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        >
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Runner"
+            android:layout_gravity="center"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            />
+    </androidx.appcompat.widget.Toolbar>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:text="*런닝 자세 영상"></TextView>
+
+    <ImageView
+        android:id="@+id/thumbnailView_running_motion"
+        android:layout_width="316dp"
+        android:layout_height="177dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:adjustViewBounds="true"
+        android:onClick="clickMethod_video_running_motion"
+        android:scaleType="fitXY"
+        android:src="@android:drawable/ic_menu_slideshow" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:text="*현재 위치"></TextView>
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:layout_marginTop="5dp"
+        android:id="@+id/layout_map">
+
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="232dp"
+            android:id="@+id/map"
+            tools:context=".MapsActivity"
+            android:name="com.google.android.gms.maps.SupportMapFragment"></fragment>
+
+
+        <Button
+            android:id="@+id/button_active_start"
+            android:layout_width="112dp"
+            android:layout_height="63dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp"
+            android:textStyle="bold"
+            android:background="@drawable/button_background_white"
+            android:text="Start  Running"></Button>
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="360dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/button_active"
+            android:padding="10dp"
+            android:layout_width="72dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:background="#2196F3"
+            android:scaleType="fitCenter"
+            android:src="@drawable/active"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/button_community"
+            android:onClick="clickMethod_community"
+            android:padding="10dp"
+            android:layout_width="72dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:background="#FFFFFF"
+            android:scaleType="fitCenter"
+            android:src="@drawable/community"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/button_record"
+            android:onClick="clickMethod_record"
+            android:padding="10dp"
+            android:layout_width="72dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:background="#FFFFFF"
+            android:scaleType="fitCenter"
+            android:src="@drawable/record"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/button_profile"
+            android:onClick="clickMethod_profile"
+            android:padding="10dp"
+            android:layout_width="72dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:background="#FFFFFF"
+            android:scaleType="fitCenter"
+            android:src="@drawable/profile_1"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/button_setting"
+            android:onClick="clickMethod_setting"
+            android:padding="10dp"
+            android:layout_width="71dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:background="#FFFFFF"
+            android:scaleType="fitCenter"
+            android:src="@drawable/setting"></ImageButton>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

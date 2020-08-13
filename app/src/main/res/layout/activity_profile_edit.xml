@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Profile_edit">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_profile_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0E4775"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        >
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="프로필 편집"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:layout_gravity="center"/>
+    </androidx.appcompat.widget.Toolbar>
+
+    <!--<ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="610dp">
+-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView_profile_image_edit"
+                android:layout_width="145dp"
+                android:layout_height="114dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/profile_1" />
+
+            <Button
+                android:id="@+id/profile_picture_edit"
+                android:layout_width="124dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/button_background_white"
+                android:text="프로필 사진 편집"></Button>
+
+
+            <TextView
+                android:layout_width="319dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:text="*러닝 거리, 페이스, 칼로리 소모량 등 더욱 정확한 결과를 제공하려면 사용자의 신체정보가 필요합니다."
+                android:textSize="15dp"></TextView>
+
+            <LinearLayout
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="닉네임"
+                    android:textSize="20dp"
+                    android:textStyle="bold"></TextView>
+
+                <EditText
+                    android:id="@+id/edit_user_nickname"
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"></EditText>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="키"
+                    android:textSize="20dp"
+                    android:textStyle="bold"></TextView>
+
+                <EditText
+                    android:id="@+id/editText_height"
+                    android:layout_width="179dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"></EditText>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="cm"
+                    android:textSize="25dp"></TextView>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="몸무게"
+                    android:textSize="20dp"
+                    android:textStyle="bold"></TextView>
+
+                <EditText
+                    android:id="@+id/editText_weight"
+                    android:layout_width="179dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"></EditText>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="kg"
+                    android:textSize="25dp"></TextView>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button_profile_check"
+                android:layout_width="121dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="25dp"
+                android:onClick="clickMethod_profile"
+                android:background="@drawable/button_background_white"
+                android:text="저장"></Button>
+
+        </LinearLayout>
+  <!--  </ScrollView>-->
+</LinearLayout>

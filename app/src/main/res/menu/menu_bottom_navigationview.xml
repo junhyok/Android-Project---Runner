@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/profile_editItem"
+        app:showAsAction="never"
+        android:title="프로필 편집"></item>
+    <!--<item
+        android:id="@+id/activeItem"
+        android:icon="@drawable/active"
+        android:title="런닝"></item>
+    <item
+        android:id="@+id/recordItem"
+        android:icon="@drawable/record"
+        android:title="기록"></item>
+    <item
+        android:id="@+id/profileItem"
+        android:icon="@drawable/profile_1"
+        android:title="프로필"></item>
+    <item
+        android:id="@+id/menuItem"
+        android:icon="@drawable/setting"
+        android:title="설정"></item>
+-->
+
+</menu>
