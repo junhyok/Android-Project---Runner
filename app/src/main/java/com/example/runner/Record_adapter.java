@@ -28,16 +28,12 @@ public class Record_adapter extends RecyclerView.Adapter<Record_adapter.ItemView
     Context context;
     private String readData;
 
-    //edit때 객체 만들때 쓰임
-    public Record_adapter() {
-
-    }
 
     public Record_adapter(ArrayList<Record_data> record_data, MyAppData myAppData, Record record) {
 
     }
 
-
+    //뷰홀더를 만들고 그 뷰홀더에 아이템 레이아웃을 넣는 곳.
     @NonNull
     @Override
     public Record_adapter.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
@@ -45,11 +41,17 @@ public class Record_adapter extends RecyclerView.Adapter<Record_adapter.ItemView
         View view = LayoutInflater.from(viewGroup.getContext()) //inflater 구현
                 .inflate(R.layout.recyclerview_item_record,viewGroup,false); //inflater로 뷰를 객체로 만듬
 
-        Record_adapter.ItemViewHolder viewHolder = new Record_adapter.ItemViewHolder(view); // 뷰홀더 객체 생성
+      //  Record_adapter.ItemViewHolder viewHolder = new Record_adapter.ItemViewHolder(view); // 뷰홀더 객체 생성
 
-        return viewHolder;   //뷰홀더 반환
+        return new ItemViewHolder(view);   //뷰홀더 반환
     }   //onCreateViewHolder
 
+
+
+    //뷰와 데이터를 연결하는 메소드
+    //onBindViewHolder에서는 데이터를 레이아웃에 어떻게 넣어줄지
+    //position에 해당하는 데이터를 ViewHolder가 관리하는 아이템View에 표시
+    //final int position을 사용해서 위치가 바뀌거나 지워질때가 있다.=>holder.getAdapterPosition()을 이용.
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder itemViewHolder, int position) {
 
@@ -60,8 +62,13 @@ public class Record_adapter extends RecyclerView.Adapter<Record_adapter.ItemView
                 itemViewHolder.replyMemberProfileImage.setImageURI(Uri.parse(tempReplyMember.profileImage));
             } else {
                 itemViewHolder.replyMemberProfileImage.setImageResource(Integer.parseInt(tempReplyMember.profileImage));
-            } // 댓글 멤버 프로필 이미지 적용*/
-            itemViewHolder.running_time.setText(running_data.running_time); //해당 포지션의 게시글 내용 넣기
+            } */
+            itemViewHolder.running_today.setText(running_data.writeTime);   // 오늘 런닝 날짜
+           itemViewHolder.running_time.setText(running_data.running_time); //해당 포지션의 런닝시간 넣기
+            itemViewHolder.running_calorie.setText(running_data.running_calorie);   //런닝 칼로리
+            itemViewHolder.running_distance.setText(running_data.running_distance); //런닝 거리
+            itemViewHolder.running_speed.setText(running_data.running_speed);   //런닝 속도
+
 
         }
 
@@ -86,7 +93,7 @@ public class Record_adapter extends RecyclerView.Adapter<Record_adapter.ItemView
         this.context = context;
     }
 
-
+    //아이템의 갯수를 반환
     @Override
     public int getItemCount() {
         return record_data.size();
@@ -94,26 +101,30 @@ public class Record_adapter extends RecyclerView.Adapter<Record_adapter.ItemView
 
 
     public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
-        TextView running_today;    //오늘 날짜
-        TextView running_distance; //런닝 거리
-        TextView running_time;     //런닝 시간
-        TextView running_speed;    //런닝 스피드
-        TextView running_calorie;  //런닝 시 소모 칼로리
-       // View running_map;    //런닝 맵
+        public TextView running_today;    //오늘 날짜
+        public TextView running_distance; //런닝 거리
+        public TextView running_time;     //런닝 시간
+        public TextView running_speed;    //런닝 스피드
+        public TextView running_calorie;  //런닝 시 소모 칼로리
+        public View running_map;    //런닝 맵
 
         //ViewHolder 생성자
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-          /*  this.running_today=itemView.findViewById(R.id.running_today);
-            this.running_distance=itemView.findViewById(R.id.running_distance);*/
-            this.running_time=itemView.findViewById(R.id.running_time);
-          /*  this.running_speed=itemView.findViewById(R.id.running_speed);
-            this.running_calorie=itemView.findViewById(R.id.running_calorie);*/
-          //  this.running_map=itemView.findViewById(R.id.running_map);
+           this.running_today=itemView.findViewById(R.id.running_today);    //런닝 날짜
+            this.running_distance=itemView.findViewById(R.id.running_distance); //런닝 거리
+            this.running_time=itemView.findViewById(R.id.running_time); //런닝 시간
+            this.running_speed=itemView.findViewById(R.id.running_speed);   //런닝 동안 평균 스피드
+            this.running_calorie=itemView.findViewById(R.id.running_calorie);   //런닝 때 사용한 칼로리
+          //  this.running_map=itemView.findViewById(R.id.running_map);   //런닝 한 코스 지도
 
-            itemView.setOnCreateContextMenuListener(this);
 
-            // 게시글 리싸이클러뷰 클릭 리스너가 있다면
+            //Context메뉴 나와서 삭제하는 기능
+            //원래는 itemView를 눌러서 삭제하려고 했는데 이유가 무엇때문인지 작동을 안한다.
+            //일단은 긴급 처방.
+            running_today.setOnCreateContextMenuListener(this);
+
+            /*// 게시글 리싸이클러뷰 클릭 리스너가 있다면
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -125,15 +136,15 @@ public class Record_adapter extends RecyclerView.Adapter<Record_adapter.ItemView
                         }
                     }
                 }
-            });             // 게시글 리싸이클러뷰 클릭 리스너가 있다면 (편집 아이콘 클릭)
+            });             // 게시글 리싸이클러뷰 클릭 리스너가 있다면 (편집 아이콘 클릭)*/
         }   //ItemViewHolder 생성자
 
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            MenuItem Edit = menu.add(Menu.NONE, 1001, 1, "편집");
+           // MenuItem Edit = menu.add(Menu.NONE, 1001, 1, "편집");
             MenuItem Delete = menu.add(Menu.NONE, 1002, 1, "삭제");
-            Edit.setOnMenuItemClickListener(onEditMenu);
+           // Edit.setOnMenuItemClickListener(onEditMenu);
             Delete.setOnMenuItemClickListener(onEditMenu);
         }
 
@@ -171,7 +182,8 @@ public class Record_adapter extends RecyclerView.Adapter<Record_adapter.ItemView
 
                         dataEditor.putString("active_measure", jsonArray.toString());
                         dataEditor.apply();
-                        //컨텐츠가 다 없어지려고 하면 앱이 꺼진다.
+
+
                         record_data.remove(getAdapterPosition());
 
                         notifyItemRemoved(getAdapterPosition());

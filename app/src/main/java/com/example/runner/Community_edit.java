@@ -29,19 +29,29 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Locale;
 
 public class Community_edit extends AppCompatActivity {
 
     EditText editText_edit_content;
-    ImageView community_image_edit;
+    ImageView imageView_edit_communityImage;
     String community_content,content_position;
+    String community_image;
+    String memberNickname;
+    String profileImage;
+    String likeCount;
+    int ddatgeulCount;
+    Uri selectedImageUri_edit;
     Button  edit_content_finish,edit_content_cancel;
     ArrayList<Community_data>community_data;
     private final int GET_GALLERY_IMAGE = 200;
@@ -51,7 +61,8 @@ public class Community_edit extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community_edit);
 
-        editText_edit_content=findViewById(R.id.editText_edit_content);
+        imageView_edit_communityImage=findViewById(R.id.imageView_edit_communityImage); //게시글 이미지 Image뷰
+        editText_edit_content=findViewById(R.id.editText_edit_content); //게시글 내용 editText뷰
         edit_content_cancel=findViewById(R.id.edit_content_cancel);     //수정 취소
         edit_content_finish=findViewById(R.id.edit_content_finish);     //수정 완료
         final Community_adapter adapter = new Community_adapter();
@@ -59,11 +70,35 @@ public class Community_edit extends AppCompatActivity {
 
         //보내온 인텐트 데이터 가져오기
         Intent intent = getIntent();
-        community_content = intent.getStringExtra("boardContent");
+        community_content = intent.getStringExtra("boardContent");  //게시글 내용
+        community_image=intent.getStringExtra("boardImage");    //게시글 이미지
         content_position = intent.getStringExtra("content_position");
 
-        //수정할 내용 텍스트 가져오기
-        editText_edit_content.setText(community_content);
+
+        //수정할 내용 가져오기
+        editText_edit_content.setText(community_content);   //게시글 내용
+        imageView_edit_communityImage.setImageURI(Uri.parse(community_image));        //게시글 이미지
+
+        //닉네임
+        SharedPreferences sharedPreferences_member=getSharedPreferences("member",MODE_PRIVATE);
+        memberNickname=sharedPreferences_member.getString("memberNickname","");
+
+        //프로필 이미지
+        profileImage=sharedPreferences_member.getString("uri","");
+
+        //작성시간
+        final Date currentTime = Calendar.getInstance().getTime();
+        final String date_text=new SimpleDateFormat("yy.MM.dd HH시 mm분", Locale.getDefault()).format(currentTime);
+
+        //게시글 번호
+        final long epoch = System.currentTimeMillis();
+
+        //좋아요 숫자
+        likeCount=sharedPreferences_member.getString("likeCount","");
+
+        //댓글 숫자
+        ddatgeulCount=0;
+
 
         //수정완료 버튼
         edit_content_finish.setOnClickListener(new View.OnClickListener() {
@@ -72,174 +107,61 @@ public class Community_edit extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getSharedPreferences("community_item", MODE_PRIVATE);
                 String readData = sharedPreferences.getString("community_item", "");
 
-
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 JSONObject jsonObject = new JSONObject();
 
                 //내용 수정
                 try {
                     JSONArray jsonArray = new JSONArray(readData);
+                     //게시글 번호
+                    jsonObject.remove("boardNo");
+                    jsonObject.put("boardNo",epoch);
                     //수정 텍스트 창의 데이터를 읽어와 String으로 변환하고 Object에 넣어준다.
+                    jsonObject.remove("boardContent");
                     jsonObject.put("boardContent", editText_edit_content.getText().toString());
+                    //닉네임
+                    jsonObject.remove("memberNickname");
+                    jsonObject.put("memberNickname",memberNickname);
+                    //작성시간
+                    jsonObject.remove("writeTime");
+                    jsonObject.put("writeTime",date_text);
+                    //프로필 이미지
+                    jsonObject.remove("ProfileImage");
+                    jsonObject.put("profileImage", profileImage);
+                    //게시글 이미지
+                    jsonObject.remove("boardImage");
+                    jsonObject.put("boardImage",selectedImageUri_edit);
+                    //게시글 좋아요 숫자
+                    jsonObject.remove("likeCount");
+                    jsonObject.put("likeCount",likeCount);
+
 
                     //수정한 jsonObject를 수정하려는 아이템에 넣기
                     jsonArray.put(Integer.parseInt(content_position), jsonObject);
 
                     //역직렬화
                     ArrayList<String> array_edit = new ArrayList<>();
-
                     JSONArray jsonArray_edit =new JSONArray(jsonArray.toString());
-
                     for(int i =0; i < jsonArray_edit.length(); i++){
+                        Log.d("check","게시글에 넣을 자료 읽기 시작");
                         JSONObject jsonObject_edit =jsonArray_edit.getJSONObject(i);
+                        array_edit.add(jsonObject_edit.getString("boardNo"));
                         array_edit.add(jsonObject_edit.getString("boardContent"));
+                        array_edit.add(jsonObject_edit.getString("memberNickname"));
+                        array_edit.add(jsonObject_edit.getString("writeTime"));
+                        array_edit.add(jsonObject_edit.getString("profileImage"));
+                        array_edit.add(jsonObject_edit.getString("boardImage"));
+                        array_edit.add(jsonObject_edit.getString("likeCount"));
+
                     }
 
                     //jsonarry = [ {"boardContent" ,"11" } ,  {"boardContent" ,"22" }, {"boardContent" ,"33" }]
-
 
                     Collections.reverse(array_edit);
 
                     //갱신 , 어댑터에서 RecyclerView에 반영하도록 한다.
                     editor.putString("community_item", jsonArray.toString());
                     editor.apply(); //바껴진 상태
-
-                  /*  int[] n = { 6246, 87, 0, -75, 3531 };*/
-
-//                    List<String> list_edit= new List<String>(jsonArray.toString()) {
-//                        @Override
-//                        public int size() {
-//                            return 0;
-//                        }
-//
-//                        @Override
-//                        public boolean isEmpty() {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean contains(@Nullable Object o) {
-//                            return false;
-//                        }
-//
-//                        @NonNull
-//                        @Override
-//                        public Iterator<String> iterator() {
-//                            return null;
-//                        }
-//
-//                        @NonNull
-//                        @Override
-//                        public Object[] toArray() {
-//                            return new Object[0];
-//                        }
-//
-//                        @NonNull
-//                        @Override
-//                        public <T> T[] toArray(@NonNull T[] a) {
-//                            return null;
-//                        }
-//
-//                        @Override
-//                        public boolean add(String s) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean remove(@Nullable Object o) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean containsAll(@NonNull Collection<?> c) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean addAll(@NonNull Collection<? extends String> c) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean addAll(int index, @NonNull Collection<? extends String> c) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean removeAll(@NonNull Collection<?> c) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean retainAll(@NonNull Collection<?> c) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public void clear() {
-//
-//                        }
-//
-//                        @Override
-//                        public boolean equals(@Nullable Object o) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public int hashCode() {
-//                            return 0;
-//                        }
-//
-//                        @Override
-//                        public String get(int index) {
-//                            return null;
-//                        }
-//
-//                        @Override
-//                        public String set(int index, String element) {
-//                            return null;
-//                        }
-//
-//                        @Override
-//                        public void add(int index, String element) {
-//
-//                        }
-//
-//                        @Override
-//                        public String remove(int index) {
-//                            return null;
-//                        }
-//
-//                        @Override
-//                        public int indexOf(@Nullable Object o) {
-//                            return 0;
-//                        }
-//
-//                        @Override
-//                        public int lastIndexOf(@Nullable Object o) {
-//                            return 0;
-//                        }
-//
-//                        @NonNull
-//                        @Override
-//                        public ListIterator<String> listIterator() {
-//                            return null;
-//                        }
-//
-//                        @NonNull
-//                        @Override
-//                        public ListIterator<String> listIterator(int index) {
-//                            return null;
-//                        }
-//
-//                        @NonNull
-//                        @Override
-//                        public List<String> subList(int fromIndex, int toIndex) {
-//                            return null;
-//                        }
-//                    };
-
-
 
 
                  /*  // 원본 정수 배열 출력n
@@ -251,8 +173,8 @@ public class Community_edit extends AppCompatActivity {
                     System.out.println(Arrays.toString(reverseArrayInt(n)));
                     // 출력 결과: [3531, -75, 0, 87, 6246]
 */
+                   adapter.notifyDataSetChanged();
 
-                    adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -268,12 +190,11 @@ public class Community_edit extends AppCompatActivity {
 
 
         //이거 때문에 리싸이클러뷰에서 수정창으로 바끼어지지 않음. 확인 바람
-       /* //갤러리
+       //갤러리
         checkSelfPermission();
-        community_image_edit=findViewById(R.id.imageView_community_write);
 
 
-        community_image_edit.setOnClickListener(new View.OnClickListener() {
+        imageView_edit_communityImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -283,8 +204,11 @@ public class Community_edit extends AppCompatActivity {
                 startActivityForResult(intent, GET_GALLERY_IMAGE);
 
             }
-        });*/
+        });
 
+        //사진 보내기
+        Intent intent_edit = new Intent(Community_edit.this,Community.class);
+        intent_edit.putExtra("imageUri", String.valueOf(imageView_edit_communityImage));
 
 
 
@@ -296,7 +220,8 @@ public class Community_edit extends AppCompatActivity {
 
         //왼쪽 버튼 사용 여부 확인 , 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
         actionBar.setDisplayHomeAsUpEnabled(true);
-    }
+
+    }   //onCreate
 
 
     //화면이 보일 때
@@ -313,7 +238,6 @@ public class Community_edit extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        finish();
     }
     @Override
     protected void onStop() {
@@ -358,8 +282,8 @@ public class Community_edit extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
-            Uri selectedImageUri = data.getData();
-            community_image_edit.setImageURI(selectedImageUri);
+            selectedImageUri_edit = data.getData();
+            imageView_edit_communityImage.setImageURI(selectedImageUri_edit);
 
 
         }
@@ -404,7 +328,7 @@ public class Community_edit extends AppCompatActivity {
         }
     }
 
-    void show()
+    /*void show()
     {
         final List<String> ListItems = new ArrayList<>();
         ListItems.add("사진 촬영");
@@ -422,6 +346,6 @@ public class Community_edit extends AppCompatActivity {
             }
         });
         builder.show();
-    }
+    }*/
 
 }

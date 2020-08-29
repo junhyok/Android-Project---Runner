@@ -113,7 +113,7 @@
                 android:layout_width="350dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal">
 
              <EditText
@@ -169,13 +169,13 @@
                 android:layout_marginTop="5dp"
                 android:textColor="#ff0000" />
             <!--닉네임 영문/숫자 조합인지 체크 오류메시지-->
-            <TextView
+           <!-- <TextView
                 android:id="@+id/nickNameConditionTestingTV"
                 android:layout_width="347dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
-                android:textColor="#ff0000" />
+                android:textColor="#ff0000" />-->
 
 <!--
     <TextView

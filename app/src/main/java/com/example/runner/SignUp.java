@@ -39,8 +39,6 @@ import java.util.regex.Pattern;
 public class SignUp extends AppCompatActivity {
 
 
-
-
     TextView passwordConditionTestingTV; // 비밀번호 조건검사 텍스트뷰
     TextView passwordCheckConditionTestingTV; // 비밀번호 확인 조건검사 텍스트뷰
 
@@ -66,6 +64,7 @@ public class SignUp extends AppCompatActivity {
 
     ArrayList<Member>nickName;  //닉네임
     ArrayList<Member>email; //이메일
+    ArrayList<Member>memberCount; //멤버
 
     MyAppData myAppData; // 앱 데이터
     MyAppService myAppService; // 앱 서비스
@@ -80,8 +79,9 @@ public class SignUp extends AppCompatActivity {
 
     String readData_email;
     String readData_nickName;
+    int membercountCheck = 0;
 
-    int memberCount=0; // 멤버 숫자
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,14 +91,17 @@ public class SignUp extends AppCompatActivity {
 
         nickName=new ArrayList<>();
         email=new ArrayList<>();
+        memberCount=new ArrayList<>();
 
         myAppService = new MyAppService(); // 앱 서비스 객체 생성
+       /* myAppData =myAppService.readAllData(this);*/
+
+
         checkBox_password=findViewById(R.id.checkBox_password); //비밀번호 숫자표시 체크박스
         checkBox_ok_information=findViewById(R.id.checkBox_ok_information); //개인정보 수집 동의 체크박스
         passwordConditionTestingTV=findViewById(R.id.passwordConditionTestingTV); // 비밀번호 조건검사 텍스트뷰
         nickNameLengthConditionTestingTV = findViewById(R.id.nickNameLengthConditionTestingTV);
-        nickNameConditionTestingTV = findViewById(R.id.nickNameConditionTestingTV); //
-
+       // nickNameConditionTestingTV = findViewById(R.id.nickNameConditionTestingTV); //
 
         emailInputET=findViewById(R.id.editText_email_input);
         passwordInputET=(EditText)findViewById(R.id.editText_password_input);   //비밀번호 첫번째 텍스트
@@ -157,6 +160,9 @@ public class SignUp extends AppCompatActivity {
             }
         });
 
+
+
+
         //툴바 설정
         Toolbar toolbar =(Toolbar) findViewById(R.id.toolbar_signUp);
         setSupportActionBar(toolbar);
@@ -194,55 +200,63 @@ public class SignUp extends AppCompatActivity {
                 }
 
                 else {
-                  //  myAppService.join(myAppData, inputEmail, password, nickName, getApplicationContext()); //데이터 넣기
+                    //  myAppService.join(myAppData, inputEmail, password, nickName, getApplicationContext()); //데이터 넣기
                     String readData;
                     SharedPreferences sharedPreferences = getSharedPreferences("member", MODE_PRIVATE);
                     readData = sharedPreferences.getString("member", "");
 
-                    if(readData.isEmpty()) {
+                    if (readData.isEmpty()) {
 
                         //쉐어드 생성
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        JSONArray jsonArray =new JSONArray();
-                        JSONObject jsonObject =new JSONObject();
-                        try{
-                        //    jsonObject.put("memberCount", String.valueOf(myAppData.memberCount));   //회원 번호
-                            jsonObject.put("memberEmail", emailInputET.getText().toString());       //회원 이메일 ID
-                            jsonObject.put("memberPassword",passwordInputET.getText().toString());  //회원 비밀번호
-                            jsonObject.put("memberNickname", nickNameInputET.getText().toString()); //회원 닉네임
+                        JSONArray jsonArray = new JSONArray();
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                                jsonObject.put("memberEmail", emailInputET.getText().toString());       //회원 이메일 ID
+                                jsonObject.put("memberPassword", passwordInputET.getText().toString());  //회원 비밀번호
+                                jsonObject.put("memberNickname", nickNameInputET.getText().toString()); //회원 닉네임
+                                jsonObject.put("uri","");    //회원 프로필 사진
+                                jsonObject.put("user_height",0);    //회원 키
+                                jsonObject.put("user_weight",0);    //회원 몸무게
 
-                            jsonArray.put(jsonObject);
+                                jsonArray.put(jsonObject);
 
-                        }catch (JSONException e){
-                            e.printStackTrace();
-                        }
-
-                        editor.putString("member",jsonArray.toString());
-                        editor.apply();
-                    }else if(!readData.isEmpty()){
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        JSONArray jsonArray=null;
-                        JSONObject jsonObject=new JSONObject();
-                        try{
-                            jsonArray=new JSONArray(readData);
-                         //   jsonObject.put("memberCount", String.valueOf(myAppData.memberCount));   //회원 번호
-                            jsonObject.put("memberEmail", emailInputET.getText().toString());       //회원 이메일 ID
-                            jsonObject.put("memberPassword",passwordInputET.getText().toString());  //회원 비밀번호
-                            jsonObject.put("memberNickname", nickNameInputET.getText().toString()); //회원 닉네임
-
-                            jsonArray.put(jsonObject);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        editor.putString("member",jsonArray.toString());
+
+                        editor.putString("member", jsonArray.toString());
+                        editor.apply();
+                    } else if (!readData.isEmpty()) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        JSONArray jsonArray = null;
+                        JSONObject jsonObject = new JSONObject();
+
+                        //멤버 숫자 같으면 숫자 증가 만들기 -다른 회원과 구별되게
+                        try {
+                            jsonArray = new JSONArray(readData);
+
+                                jsonObject.put("memberEmail", emailInputET.getText().toString());       //회원 이메일 ID
+                                jsonObject.put("memberPassword", passwordInputET.getText().toString());  //회원 비밀번호
+                                jsonObject.put("memberNickname", nickNameInputET.getText().toString()); //회원 닉네임
+                                jsonObject.put("uri","");    //회원 프로필 사진
+                                jsonObject.put("user_height",0);    //회원 키
+                                jsonObject.put("user_weight",0);    //회원 몸무게
+
+                                jsonArray.put(jsonObject);
+
+                            } catch(JSONException e){
+                                e.printStackTrace();
+                            }
+                        editor.putString("member", jsonArray.toString());
                         editor.apply();
                     }
-
                     //데이터 추가 확인 토스트 띄우기
                     Toast.makeText(SignUp.this, "회원 가입 되었습니다", Toast.LENGTH_SHORT).show();
+
                     //메인화면으로 화면전환
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
                     finish();
                 }
@@ -399,7 +413,7 @@ public class SignUp extends AppCompatActivity {
 
                 }
 
-            }
+            }   //onClick
         });
 
         //이메일 중복체크 버튼
@@ -410,6 +424,7 @@ public class SignUp extends AppCompatActivity {
                 readData_email=sharedPreferences.getString("member","");
                 try {
                     JSONArray jsonArray =new JSONArray(readData_email);
+
                     for(int i =0; i< jsonArray.length();i++){
                         JSONObject jsonObject =jsonArray.getJSONObject(i);
                         email.add(new Member(
@@ -604,3 +619,15 @@ public class SignUp extends AppCompatActivity {
         return returnValue;
     }
 }
+/*
+
+
+//배열에 추가해라. 쉐어드에서 가져온 데이터를
+  for(int i =0; i< jsonArray.length();i++){
+                                JSONObject jsonObject =jsonArray.getJSONObject(i);
+                                memberCount.add(new Member(
+                                        jsonObject.getString("mamberNo")
+                                        ));
+                                        if(memberCount.get(i).memberNo.equals(String.valueOf(membercountCheck))) {
+                                        membercountCheck++;
+                                        })*/

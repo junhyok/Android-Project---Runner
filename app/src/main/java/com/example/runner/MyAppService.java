@@ -23,11 +23,11 @@ public class MyAppService {
 
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 쉐어드 관련 메소드 시작 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-    // 데이터 초기화
+   /* // 데이터 초기화
     public MyAppData initData(Context context){
         MyAppData myAppData = new MyAppData(0);
 
-        Log.w("하하하","loginMemberNo  "+myAppData.loginMemberNo);
+        *//*Log.w("하하하","loginMemberNo  "+myAppData.loginMemberNo);*//*
 
         SharedPreferences sharedPreferences = context.getSharedPreferences("myAppData",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor; // editor : 데이터 저장에 필요하다
@@ -49,10 +49,10 @@ public class MyAppService {
         }
 
         editor.commit();
-//        sorting(myAppData);
+
         return myAppData;
-    }
-   /* // 모든 데이터 저장
+    }*/
+    /*// 모든 데이터 저장
     public void writeAllData(MyAppData myAppData,Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences("myAppData",MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit(); // editor : 데이터 저장에 필요하다
@@ -72,9 +72,9 @@ public class MyAppService {
         }
 
         editor.commit();
-    }
-*/
-    // 모든 데이터 읽기
+    }*/
+
+   /* // 모든 데이터 읽기
     public MyAppData readAllData(Context context) {
         MyAppData myAppData = new MyAppData(); // 껍데기 앱 데이터 객체 생성
         int loginMemberNo = -1;
@@ -128,8 +128,8 @@ public class MyAppService {
 
         return myAppData;
     }
-
-    // 목록 데이터 정렬 메소드
+*/
+   /* // 목록 데이터 정렬 메소드
     public MyAppData sorting(MyAppData myAppData){
         ArrayList<Member> tempMembers = myAppData.members;
         for (int i = 0; i < tempMembers.size()-1; i++) {
@@ -164,7 +164,7 @@ public class MyAppService {
 
 
         return myAppData;
-    }
+    }*/
 
     // 멤버 객체를 저장하는 메소드
     public void writeMemberData(Member member,Context context){
@@ -222,36 +222,17 @@ public class MyAppService {
         return memberToString;
     }
 
-    // 멤버 문자열을 멤버 객체로 바꾸는 메소드
+   /* // 멤버 문자열을 멤버 객체로 바꾸는 메소드
     public Member stringToMember(String memberStr){
         String[] strArr = memberStr.split("\\|");
-        String followsStr;
-        String followingsStr;
-        ArrayList<Integer> follows = new ArrayList<>();
-        ArrayList<Integer> followings = new ArrayList<>();
 
-        followsStr = strArr[5];
-        if(!strArr[5].equals(" ")){
-            String[] followsStrArr = followsStr.split(",");
-            for (int i = 0; i < followsStrArr.length; i++) {
-                follows.add(Integer.parseInt(followsStrArr[i].trim()));
-            }
-        }
-        followingsStr = strArr[6];
-        if(!strArr[6].equals(" ")){
-            String[] followingsStrArr = followingsStr.split(",");
-            for (int i = 0; i < followingsStrArr.length; i++) {
-                followings.add(Integer.parseInt(followingsStrArr[i].trim()));
-            }
-        }
         Member findMember
                 = new Member(Integer.parseInt(strArr[0]),strArr[1],strArr[2],strArr[3]);
         findMember.profileImage = strArr[4];
-        /*findMember.follows = follows;
-        findMember.followings = followings;*/
+
         return findMember;
-    }
-    // 게시글을 삭제하는 메소드
+    }*/
+/*    // 게시글을 삭제하는 메소드
     public void deleteBoardData(Community_data board,Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences("myAppData",MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -263,9 +244,9 @@ public class MyAppService {
         SharedPreferences sharedPreferences = context.getSharedPreferences("myAppData",MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("board/"+board.boardNo,this.boardToString(board)).commit();
-    }
+    }*/
 
-    // 게시글 객체를 문자열로 바꾸는 메소드
+  /*  // 게시글 객체를 문자열로 바꾸는 메소드
     public String boardToString(Community_data board){
         String boardToString="";
         String likeMembers="";
@@ -283,9 +264,9 @@ public class MyAppService {
             boardToString = boardToString+"| ";
         }
         return boardToString;
-    }
+    }*/
 
-    // 게시글 문자열을 게시글 객체로 바꾸는 메소드
+  /*  // 게시글 문자열을 게시글 객체로 바꾸는 메소드
     public Community_data stringToBoard(String boardStr){
         String[] strArr = boardStr.split("\\|");
         ArrayList<Integer> likeMembers = new ArrayList<>();
@@ -301,7 +282,7 @@ public class MyAppService {
         findBoard.writeTime = strArr[4];
         findBoard.likeMembers = likeMembers;
         return findBoard;
-    }
+    }*/
     // 댓글 객체를 삭제하는 메소드
     public void deleteReplyData(Ddatgeul_data reply,Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences("myAppData",MODE_PRIVATE);
@@ -309,14 +290,14 @@ public class MyAppService {
         editor.remove("reply/"+reply.replyNo).commit();
     }
 
-    // 댓글 객체를 문자열로 바꾸는 메소드
+  /*  // 댓글 객체를 문자열로 바꾸는 메소드
     public String replyToString(Ddatgeul_data reply){
         String replyToString=reply.replyBoardNo +"|"+reply.replyNo+"|"+reply.ddatgeul_content+
                 "|"+reply.replyMemberNo+"|"+reply.ddatgeul_writeTime;
         return replyToString;
     }
-
-    // 댓글 문자열을 댓글 객체로 바꾸는 메소드
+*/
+  /*  // 댓글 문자열을 댓글 객체로 바꾸는 메소드
     public Ddatgeul_data stringToReply(String replyStr){
         String[] strArr = replyStr.split("\\|");
         Ddatgeul_data findReply
@@ -324,27 +305,27 @@ public class MyAppService {
                 strArr[2],Integer.parseInt(strArr[3]));
         findReply.ddatgeul_writeTime = strArr[4];
         return findReply;
-    }
+    }*/
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 쉐어드 관련 메소드 끝 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-    // 게시글 번호로 게시글 객체를 찾는 메소드
-    public Community_data findBoardByBoardNo(MyAppData myAppData, int boardNo){
-//        Log.w(LoginActivity.TAG+this.getClass().getSimpleName(),"findBoardByBoardNo() : myAppData.boards.size() : "+myAppData.boards.size());
-//        for (int i = 0; i < myAppData.boards.size(); i++) {
-//            Log.w(LoginActivity.TAG+this.getClass().getSimpleName(),"findBoardByBoardNo() : 보드들 다 뽑아봐 : "+myAppData.boards.get(i).boardNo);
+//    // 게시글 번호로 게시글 객체를 찾는 메소드
+//    public Community_data findBoardByBoardNo(MyAppData myAppData, int boardNo){
+////        Log.w(LoginActivity.TAG+this.getClass().getSimpleName(),"findBoardByBoardNo() : myAppData.boards.size() : "+myAppData.boards.size());
+////        for (int i = 0; i < myAppData.boards.size(); i++) {
+////            Log.w(LoginActivity.TAG+this.getClass().getSimpleName(),"findBoardByBoardNo() : 보드들 다 뽑아봐 : "+myAppData.boards.get(i).boardNo);
+////        }
+//        Community_data findBoard=null;
+//        for (Community_data tempBoard : myAppData.boards){
+//            if(tempBoard.boardNo==boardNo){
+//                findBoard=tempBoard;
+//            }
 //        }
-        Community_data findBoard=null;
-        for (Community_data tempBoard : myAppData.boards){
-            if(tempBoard.boardNo==boardNo){
-                findBoard=tempBoard;
-            }
-        }
-//        Log.w(LoginActivity.TAG+this.getClass().getSimpleName(),"findBoardByBoardNo() : findBoard.boardNo : "+findBoard.boardNo);
-        return findBoard;
-    }
+////        Log.w(LoginActivity.TAG+this.getClass().getSimpleName(),"findBoardByBoardNo() : findBoard.boardNo : "+findBoard.boardNo);
+//        return findBoard;
+//    }
 
-    // 멤버번호로 멤버 찾는 메소드 (멤버객체 리턴)
+   /* // 멤버번호로 멤버 찾는 메소드 (멤버객체 리턴)
     public Member findMemberByMemberNo(MyAppData myAppData, int memberNo){
         Member findMember=null;
         for (Member tempMember: myAppData.members) {
@@ -353,7 +334,7 @@ public class MyAppService {
             }
         }
         return findMember;
-    }
+    }*/
 
     // 이메일로 멤버 찾는 메소드 (멤버객체 리턴)
     public Member findMemberByEmail(MyAppData myAppData, String email){
@@ -377,7 +358,7 @@ public class MyAppService {
         return findMember;
     }
 
-    // 로그인 메소드 (멤버 번호 리턴)
+   /* // 로그인 메소드 (멤버 번호 리턴)
     public int login(MyAppData myAppData, String inputEmail, String password){
         int loginMemberNo=-1;
         Member tempMember = findMemberByEmail(myAppData,inputEmail);    //이메일로 멤버를 찾는 메소드
@@ -388,8 +369,8 @@ public class MyAppService {
         }
         return loginMemberNo;
     }
-
-    // 휴대전화로 로그인하기 메소드 (멤버 번호 리턴)
+*/
+   /* // 휴대전화로 로그인하기 메소드 (멤버 번호 리턴)
     public int loginByPhone(MyAppData myAppData, String inputPhoneNum){
         int loginMemberNo=-1;
         Member tempMember = findMemberByEmail(myAppData,inputPhoneNum);
@@ -399,7 +380,7 @@ public class MyAppService {
             }
         }
         return loginMemberNo;
-    }
+    }*/
 
     // 인증번호 생성 메소드
     public String makeAuthenticationNum(){
@@ -490,25 +471,24 @@ public class MyAppService {
         }
         return isPasswordCheckOk;
     }
-
-  /*  // 회원가입 메소드
+/*
+    // 회원가입 메소드
     public void join(MyAppData myAppData, String email, String password, String nickName,Context context){
-       // Member joinMember = new Member(email,password,nickName);
-       // myAppData.memberCount++;
-//        myAppData.members.add(joinMember);
+        Member joinMember = new Member(email,password,nickName);
+        myAppData.memberCount++;
+        myAppData.members.add(joinMember);
         writeAllData(myAppData,context);
 
     }*/
+
 
     // Calendar를 년월일시분초로 반환 메소드
     public String timeToString(Calendar time) {
         String timeToString = (time.get(Calendar.YEAR)) + "." + (time.get(Calendar.MONTH) + 1) + "."
                 + (time.get(Calendar.DAY_OF_MONTH)) + "  " + (time.get(Calendar.HOUR_OF_DAY)) + "시 "
                 + (time.get(Calendar.MINUTE))+"분";
-//        String timeToString = (time.get(Calendar.MONTH) + 1) + "월 "
-//                + (time.get(Calendar.DAY_OF_MONTH)) + "일 " + (time.get(Calendar.HOUR_OF_DAY)) + "시 "
-//                + (time.get(Calendar.MINUTE)) + "분 " + (time.get(Calendar.SECOND)) + "초";
-        return timeToString.substring(2);
+
+        return timeToString.substring(2);   //앞의 0,1번째 자리 빼고 2번째 자리부터 입력값 받기
     }
 
 

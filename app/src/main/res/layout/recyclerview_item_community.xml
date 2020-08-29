@@ -81,8 +81,9 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_launcher_foreground" />
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -90,15 +91,26 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <ImageView
+                    android:id="@+id/ImageView_good_check"
                     android:layout_width="67dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="25dp"
-                    android:src="@drawable/good"></ImageView>
+                    android:visibility="gone"
+                    android:src="@drawable/red_hart"></ImageView>
+
+                <ImageView
+                    android:id="@+id/ImageView_good_empty"
+                    android:layout_width="67dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="25dp"
+                    android:visibility="visible"
+                    android:src="@drawable/empty_hart"></ImageView>
 
                 <TextView
+                    android:id="@+id/good_count"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="좋아요"
+                    android:text="좋아요 (0개)"
                     android:textColor="#000000"
                     android:textSize="15dp"
                     android:gravity="center"
@@ -107,7 +119,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="15dp"
             android:onClick="clickMethod_enter_content"
             android:orientation="horizontal">
 
@@ -119,9 +131,10 @@
                     android:src="@drawable/ddatgeul"></ImageView>
 
                 <TextView
+                    android:id="@+id/ddatgeul_count"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="댓글 보기"
+                    android:text="댓글 보기 (0개)"
                     android:textColor="#000000"
                     android:gravity="center"
                     android:textSize="15dp"

@@ -38,6 +38,8 @@ dependencies {
     implementation files('libs\\mail-1.4.7.jar')
     implementation files('libs\\activation.jar')
     implementation files('libs\\additionnal.jar')
+    implementation 'com.google.maps.android:android-maps-utils:0.5'
+    /*implementation 'com.github.ar-android:DrawRouteMaps:1.0.0'*/
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

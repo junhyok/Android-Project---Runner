@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,6 +14,9 @@
         android:background="#0E4775"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         xmlns:android="http://schemas.android.com/apk/res/android"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         >
         <TextView
             android:id="@+id/toolbar_title"
@@ -26,34 +29,45 @@
             />
     </androidx.appcompat.widget.Toolbar>
     <TextView
+        android:id="@+id/textView_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
         android:textStyle="bold"
         android:textSize="20dp"
-        android:text="*사진 수정하기"></TextView>
+        android:text="*사진 수정하기"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_community_edit"></TextView>
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="match_parent"
-        android:layout_height="239dp"
+        android:id="@+id/imageView_edit_communityImage"
+        android:layout_width="337dp"
+        android:layout_height="153dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_edit"
         app:srcCompat="@android:drawable/ic_menu_gallery" />
 
-    <TextView
+   <!-- <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
         android:textStyle="bold"
         android:textSize="20dp"
-        android:text="*내용 수정하기"></TextView>
+        android:text="*내용 수정하기"></TextView>-->
 
     <ScrollView
         android:layout_width="366dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout_edit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent"
         >
         <EditText
             android:id="@+id/editText_edit_content"
@@ -63,31 +77,36 @@
     </ScrollView>
 
     <LinearLayout
+        android:id="@+id/linearLayout_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:layout_gravity="center"
-        android:orientation="horizontal">
+        
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/toolbar_community_edit"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/edit_content_cancel"
             android:layout_width="115dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/button_background_white"
             android:gravity="center"
             android:onClick="clickMethod_edit_cancel"
-            android:background="@drawable/button_background_white"
             android:text="수정 취소"></Button>
+
         <Button
             android:id="@+id/edit_content_finish"
             android:layout_width="115dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginLeft="40dp"
-            android:onClick="clickMethod_edit_finish"
             android:background="@drawable/button_background_white"
+            android:gravity="center"
+            android:onClick="clickMethod_edit_finish"
             android:text="수정 완료"></Button>
     </LinearLayout>
 
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

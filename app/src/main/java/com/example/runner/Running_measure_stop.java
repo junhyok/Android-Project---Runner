@@ -1,6 +1,7 @@
 package com.example.runner;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -11,6 +12,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -18,12 +21,17 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/*import com.ahmadrosid.lib.drawroutemap.DrawMarker;
+import com.ahmadrosid.lib.drawroutemap.DrawRouteMaps;*/
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -33,39 +41,173 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.maps.android.SphericalUtil;
+import com.google.maps.android.projection.SphericalMercatorProjection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 
 public class Running_measure_stop extends AppCompatActivity implements OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback{
+    PolylineOptions polylineOptions;
+    double distance_all=0;
+    SharedPreferences sharedPreferences;
+    String current_position;
+    String destination_currentPosition;
+    List<Polyline>polylines=new List<Polyline>() {
+        @Override
+        public int size() {
+            return 0;
+        }
 
-   TextView stop_speed;     //스피드(페이스)
-   TextView stop_calorie;   //칼로리
-   TextView stop_distance;  //거리
-   TextView stop_time;  //시간
-    Button button_stop,button_restart;
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
 
+        @Override
+        public boolean contains(@Nullable Object o) {
+            return false;
+        }
+
+        @NonNull
+        @Override
+        public Iterator<Polyline> iterator() {
+            return null;
+        }
+
+        @NonNull
+        @Override
+        public Object[] toArray() {
+            return new Object[0];
+        }
+
+        @NonNull
+        @Override
+        public <T> T[] toArray(@NonNull T[] a) {
+            return null;
+        }
+
+        @Override
+        public boolean add(Polyline polyline) {
+            return false;
+        }
+
+        @Override
+        public boolean remove(@Nullable Object o) {
+            return false;
+        }
+
+        @Override
+        public boolean containsAll(@NonNull Collection<?> c) {
+            return false;
+        }
+
+        @Override
+        public boolean addAll(@NonNull Collection<? extends Polyline> c) {
+            return false;
+        }
+
+        @Override
+        public boolean addAll(int index, @NonNull Collection<? extends Polyline> c) {
+            return false;
+        }
+
+        @Override
+        public boolean removeAll(@NonNull Collection<?> c) {
+            return false;
+        }
+
+        @Override
+        public boolean retainAll(@NonNull Collection<?> c) {
+            return false;
+        }
+
+        @Override
+        public void clear() {
+
+        }
+
+        @Override
+        public Polyline get(int index) {
+            return null;
+        }
+
+        @Override
+        public Polyline set(int index, Polyline element) {
+            return null;
+        }
+
+        @Override
+        public void add(int index, Polyline element) {
+
+        }
+
+        @Override
+        public Polyline remove(int index) {
+            return null;
+        }
+
+        @Override
+        public int indexOf(@Nullable Object o) {
+            return 0;
+        }
+
+        @Override
+        public int lastIndexOf(@Nullable Object o) {
+            return 0;
+        }
+
+        @NonNull
+        @Override
+        public ListIterator<Polyline> listIterator() {
+            return null;
+        }
+
+        @NonNull
+        @Override
+        public ListIterator<Polyline> listIterator(int index) {
+            return null;
+        }
+
+        @NonNull
+        @Override
+        public List<Polyline> subList(int fromIndex, int toIndex) {
+            return null;
+        }
+    };
 
     private GoogleMap mMap;     //구글 맵
     private Marker currentMarker=null;
 
     private static final String TAG="googlemap_example";
     private static final int GPS_ENABLE_REQUEST_CODE =2001;
-    private static final int UPDATE_INTERVAL_MS =1000;  //1초
-    private static final int FASTEST_UPDATE_INTERVAL_MS=500;    //0.5초
+   /* private static final int UPDATE_INTERVAL_MS =1000;  //1초
+    private static final int FASTEST_UPDATE_INTERVAL_MS=500;    //0.5초*/
 
     //onRequestPermissionsResult에서 수신된 결과에서 ActivityCompat.requestPermissions를 사용한 퍼미션 요청을 구별하기 위해 사용됩니다.
     private static final int PERMISSIONS_REQUEST_CODE =100;
@@ -79,10 +221,37 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
 
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
-    private Location location;
+    private Location location,beforeLocation;
 
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
     // (참고로 Toast에서는 Context가 필요했습니다.)
+
+    private LatLng startLatLng = new LatLng(37.4849225, 126.9813944);        //polyline 시작점
+    private LatLng endLatLng = new LatLng(37.4899225, 126.9823944);        //polyline 끝점
+
+   TextView stop_speed;     //스피드(페이스)
+   TextView stop_calorie;   //칼로리
+   TextView stop_distance;  //거리
+   TextView stop_time;  //시간
+    Button button_stop,button_restart;    //테스트용 버튼(목적지 선택해서 남은 거리 보는 방법)
+
+    LatLng previousPosition=null;   //이전 위치
+    Marker addedMarker =null;   //추가된 마커(목적지 마커)
+    int tracking=0;     //추적
+
+    private GoogleApiClient mGoogleApiClient = null;
+    private AppCompatActivity mActivity;
+    boolean askPermissionOnceAgain = false;
+    boolean mRequestingLocationUpdates = false;
+    boolean mMoveMapByUser = true;
+    boolean mMoveMapByAPI = true;
+
+
+   // private LatLng startLatLng = new LatLng(37.4849225, 126.9813944);        //polyline 시작점
+   // private LatLng endLatLng = new LatLng(37.4899225, 126.9823944);        //polyline 끝점
+
+    String memberNickname;  //쉐어드 저장하는 닉네임 변수
+    String runningMap;  // 쉐어드 저장하는 맵(위도,경도) 변수
 
 
     @Override
@@ -94,16 +263,56 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
 
         setContentView(R.layout.activity_running_measure_stop);
 
-
+        mLayout=findViewById(R.id.layout_main); // 전체 리니어 레이아웃
         mLayout = findViewById(R.id.layout_map);    //지도
         stop_time=findViewById(R.id.stop_time);     //시간표시
         stop_distance=findViewById(R.id.stop_distance);     //거리 표시
         stop_calorie=findViewById(R.id.stop_calorie);   //칼로리 표시
         stop_speed=findViewById(R.id.stop_speed);   //스피드 표시
         button_stop=findViewById(R.id.button_stop); // 정지 버튼
-        button_restart=findViewById(R.id.button_restart);   //다시 시작 버튼
+     //   button_restart=findViewById(R.id.button_restart);   //다시 시작 버튼
 
-        //  측정 정지했던 시간 데이터 받기
+
+        //위치
+        locationRequest = new LocationRequest()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(1000)
+                .setFastestInterval(1000);
+
+        LocationSettingsRequest.Builder builder =
+                new LocationSettingsRequest.Builder();
+
+        builder.addLocationRequest(locationRequest);
+
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        //구글 맵 메니저 설정
+        SupportMapFragment mapFragment =(SupportMapFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+
+  /*      Log.d(TAG, "onCreate");
+        mActivity = this;
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);*/
+
+
+        //기록 작성시간 (오늘 날짜)
+        final Date currentTime = Calendar.getInstance().getTime();
+        final String date_text=new SimpleDateFormat("yy.MM.dd HH시 mm분", Locale.getDefault()).format(currentTime);
+
+
+        // 측정 정지했던 시간 데이터 받기(런닝 시간)
         SharedPreferences sharedPreferences_time=getSharedPreferences("active_measure",MODE_PRIVATE);
         String stop_activeTime=sharedPreferences_time.getString("running_time","");
         stop_time.setText(stop_activeTime);
@@ -126,6 +335,20 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
         String stop_activeDistance=sharedPreferences_distance.getString("running_distance","");
         stop_distance.setText(stop_activeDistance);
 
+        //닉네임
+        SharedPreferences sharedPreferences_member=getSharedPreferences("member",MODE_PRIVATE);
+        memberNickname=sharedPreferences_member.getString("memberNickname","");
+
+
+        //런닝 맵 위도 경도
+        SharedPreferences sharedPreferences_map=getSharedPreferences("active_measure",MODE_PRIVATE);
+        runningMap=sharedPreferences_map.getString("runningMap","");
+
+
+     /* //움직인 거리 지도 그리기
+        drawPath();*/
+
+
 
         //측정 정지버튼   > Record 창으로 화면 전환
         button_stop.setOnClickListener(new View.OnClickListener() {
@@ -143,10 +366,13 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
                     JSONArray jsonArray = new JSONArray();
                     JSONObject jsonObject = new JSONObject();
                     try {
-                        jsonObject.put("running_time", stop_time.getText().toString());    //시간
+                        jsonObject.put("memberNickname",memberNickname);    //사용자 닉네임
+                        jsonObject.put("writeTime",date_text); //작성시간
+                        jsonObject.put("running_time", stop_time.getText().toString());    //런닝 시간
                         jsonObject.put("running_distance", stop_distance.getText().toString());    //거리
                         jsonObject.put("running_calorie", stop_calorie.getText().toString());    //칼로리
                         jsonObject.put("running_speed", stop_speed.getText().toString());    //속도
+                        jsonObject.put("runningMap",runningMap);   //런닝맵(위도, 경도)
 
                         jsonArray.put(jsonObject);
 
@@ -163,10 +389,13 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
                     JSONObject jsonObject = new JSONObject();
                     try {
                         jsonArray = new JSONArray(readData);
-                        jsonObject.put("running_time", stop_time.getText().toString());
+                        jsonObject.put("memberNickname",memberNickname);    //사용자 닉네임
+                        jsonObject.put("writeTime",date_text); //작성시간
+                        jsonObject.put("running_time", stop_time.getText().toString()); //런닝 시간
                         jsonObject.put("running_distance", stop_distance.getText().toString());    //거리
                         jsonObject.put("running_calorie", stop_calorie.getText().toString());    //칼로리
                         jsonObject.put("running_speed", stop_speed.getText().toString());    //속도
+                        jsonObject.put("running_map",runningMap);   //런닝맵(위도, 경도)
 
                         jsonArray.put(jsonObject);
 
@@ -176,6 +405,7 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
                     editor.putString("active_measure", jsonArray.toString());
                     editor.apply();
                 }
+
                 //화면전환 (intent 객체 생성)
                 Intent intent = new Intent(Running_measure_stop.this, Record.class);
 
@@ -185,30 +415,17 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
                     Toast.makeText(Running_measure_stop.this, "기록창에 추가되었습니다", Toast.LENGTH_SHORT).show();
                     finish();
 
-
-
-
-                /*
-                Intent intent = new Intent(getApplicationContext(),Record.class);
-                SharedPreferences sharedPreferences =getSharedPreferences("active_measure",MODE_PRIVATE);
-
-                SharedPreferences.Editor editor =sharedPreferences.edit();
-                String active_time=chronometer.getText().toString();
-                editor.putString("active_time",active_time);
-
-                editor.commit();
-                */
                 startActivity(intent);
             }
         });
 
-        //측정 다시재생 버튼   > Running_measure 창으로 화면 전환
+      /*  //측정 다시재생 버튼   > Running_measure 창으로 화면 전환
         button_restart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
               //  chronometer.stop();
                 Intent intent = new Intent(getApplicationContext(),Running_measure.class);
-                /*SharedPreferences sharedPreferences =getSharedPreferences("active_measure",MODE_PRIVATE);
+                *//*SharedPreferences sharedPreferences =getSharedPreferences("active_measure",MODE_PRIVATE);
 
                 SharedPreferences.Editor editor =sharedPreferences.edit();
                 String active_time=chronometer.getText().toString();
@@ -216,55 +433,31 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
 
                 editor.commit();
 
-*/
+*//*
                 startActivity(intent);
             }
+        });*/
+
+
+        //거리 측정 시작 버튼  tracking(추적)
+        final Button button = (Button)findViewById(R.id.button_path);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                drawPath();
+                tracking = 1 - tracking;
+
+                if ( tracking == 1){
+                    button.setText("경로 보기");
+                }
+                else button.setText("경로 보기");
+            }
         });
-
-
-
-
-        //위치
-        locationRequest = new LocationRequest()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(UPDATE_INTERVAL_MS)
-                .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
-
-
-        LocationSettingsRequest.Builder builder =
-                new LocationSettingsRequest.Builder();
-
-        builder.addLocationRequest(locationRequest);
-
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        //구글 맵 메니저 설정
-        SupportMapFragment mapFragment =(SupportMapFragment)getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
 
     }   //onCreate
 
 
-
-    //화면이 보일 때
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart");
-
-        if (checkPermission()) {
-
-            Log.d(TAG, "onStart : call mFusedLocationClient.requestLocationUpdates");
-            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-
-            if (mMap!=null)
-                mMap.setMyLocationEnabled(true);
-
-        }
-    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -276,16 +469,7 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
         super.onPause();
         finish();
     }
-    @Override
-    protected void onStop() {
-        super.onStop();
 
-        if (mFusedLocationClient != null) {
-
-            Log.d(TAG, "onStop : call stopLocationUpdates");
-            mFusedLocationClient.removeLocationUpdates(locationCallback);
-        }
-    }
 
     @Override
     protected void onDestroy() {
@@ -294,15 +478,68 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
 
 
 
+    private void drawPath(){        //polyline을 그려주는 메소드
+        SharedPreferences sharedPreferences = getSharedPreferences("active_measure", MODE_PRIVATE);
+        current_position = sharedPreferences.getString("current_position", "");
+        destination_currentPosition = sharedPreferences.getString("destination_currentPosition", "");
+
+        String current_position_edit=current_position.replaceAll("\\(","").replaceAll("\\)","");
+        /*str = str.replaceAll("\\[", "").replaceAll("\\]","");*/
+
+        String[] latLng =current_position_edit.split(",");
+        double latitude = Double.parseDouble(latLng[0]);
+        double longitude = Double.parseDouble(latLng[1]);
+        LatLng location_start = new LatLng(latitude, longitude);
+
+        String destination_currentPosition_edit=destination_currentPosition.replaceAll("\\(","").replaceAll("\\)","");
+        String[] latLng_last =destination_currentPosition_edit.split(",");
+        double latitude_last = Double.parseDouble(latLng_last[0]);
+        double longitude_last = Double.parseDouble(latLng_last[1]);
+        LatLng location_last = new LatLng(latitude_last, longitude_last);
+
+
+        PolylineOptions options = new PolylineOptions().add(location_start).add(location_last).width(15).color(Color.BLACK).geodesic(true);
+        polylines.add(mMap.addPolyline(options));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location_start, 18));
+    }
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG,"onMapReady : ");
 
         mMap=googleMap;
 
+/*        //움직인 거리 지도 그리기
+        drawPath();*/
+
+     /*   Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
+                .clickable(true)
+                .add(
+                        new LatLng(-35.016, 143.321),
+                        new LatLng(-34.747, 145.592),
+                        new LatLng(-34.364, 147.891),
+                        new LatLng(-33.501, 150.217),
+                        new LatLng(-32.306, 149.248),
+                        new LatLng(-32.491, 147.309)));*/
+
+    /*    //폴리라인 그리기
+        Polyline line = mMap.addPolyline(new PolylineOptions()
+                .clickable(true)
+                .add(new LatLng(51.5, -0.1), new LatLng(40.7, -74.8))
+                .width(5)
+                .color(Color.RED));
+
+        googleMap.setOnPolylineClickListener((GoogleMap.OnPolylineClickListener) this);
+        googleMap.setOnPolygonClickListener((GoogleMap.OnPolygonClickListener) this);
+        line.setTag("A");*/
+
+
+
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에
         //지도의 초기위치를 서울로 이동
         setDefaultLocation();
+
 
         //런타임 퍼미션 처리
         // 1. 위치 퍼미션을 가지고 있는지 체크합니다.
@@ -347,9 +584,6 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
                         PERMISSIONS_REQUEST_CODE);
             }
         }
-
-
-
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -360,7 +594,6 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
                 Log.d( TAG, "onMapClick :");
             }
         });
-
     }
 
     LocationCallback locationCallback = new LocationCallback() {
@@ -374,8 +607,40 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
                 location = locationList.get(locationList.size() - 1);
                 //location = locationList.get(0);
 
-                currentPosition
-                        = new LatLng(location.getLatitude(), location.getLongitude());
+                previousPosition = currentPosition;   //이전 포지션이 현재 포지션
+
+                //현재 위치
+                currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
+
+
+                if (previousPosition == null) {
+                    previousPosition = currentPosition;
+
+                }
+                Log.d("abc","currentPosition"+currentPosition);
+                Log.d("abc","previousPosition"+previousPosition);
+
+                //if ( (addedMarker != null) && tracking == 1 ) {
+                  //  double radius = 500; // 500m distance.
+                    Log.d("distance","distance 값확인");
+                    double distance = SphericalUtil.computeDistanceBetween(previousPosition, currentPosition);
+
+                    if(distance<=1 && distance>=0.5) {
+
+                        distance_all += distance;
+                    }
+                   /* Log.d("abc","위도"+location.getLatitude());
+                    Log.d("abc","경도"+location.getLongitude());*/
+                    Log.d("abc","distance 값확인"+distance);
+                    Log.d("abc","distance_all 값확인"+distance_all);
+
+                    if (/*(distance < radius) &&*/ (!previousPosition.equals(currentPosition))) {
+
+                       // Toast.makeText(Running_measure_stop.this, addedMarker.getTitle() + "까지" + (int) distance + "m 남음", Toast.LENGTH_LONG).show();
+                    //    Toast.makeText(Running_measure_stop.this, (int) distance_all + "m 갔음", Toast.LENGTH_LONG).show();
+
+                    }
+                //}
 
 
                 String markerTitle = getCurrentAddress(currentPosition);
@@ -390,11 +655,9 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
 
                 mCurrentLocatiion = location;
             }
-
-
         }
-
     };
+    //시작 위치 업데이트
     private void startLocationUpdates() {
 
         if (!checkLocationServicesStatus()) {
@@ -421,12 +684,37 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
             Log.d(TAG, "startLocationUpdates : call mFusedLocationClient.requestLocationUpdates");
 
             mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
-
             if (checkPermission())
                 mMap.setMyLocationEnabled(true);
 
         }
+    }
 
+    //화면이 보일 때
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart");
+
+        if (checkPermission()) {
+
+            Log.d(TAG, "onStart : call mFusedLocationClient.requestLocationUpdates");
+            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+
+            if (mMap!=null)
+                mMap.setMyLocationEnabled(true);
+
+        }
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mFusedLocationClient != null) {
+
+            Log.d(TAG, "onStop : call stopLocationUpdates");
+            mFusedLocationClient.removeLocationUpdates(locationCallback);
+        }
     }
     public String getCurrentAddress(LatLng latlng) {
 
@@ -494,12 +782,10 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
 
     public void setDefaultLocation() {
 
-
         //디폴트 위치, Seoul
         LatLng DEFAULT_LOCATION = new LatLng(37.56, 126.97);
         String markerTitle = "위치정보 가져올 수 없음";
         String markerSnippet = "위치 퍼미션과 GPS 활성 요부 확인하세요";
-
 
         if (currentMarker != null) currentMarker.remove();
 
@@ -532,7 +818,6 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
         }
 
         return false;
-
     }
     /*
      * ActivityCompat.requestPermissions를 사용한 퍼미션 요청의 결과를 리턴받는 메소드입니다.
@@ -626,7 +911,6 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
         builder.create().show();
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -652,4 +936,51 @@ public class Running_measure_stop extends AppCompatActivity implements OnMapRead
         }
     }
 
+    //add에다가 위치 좌표를 넣어줘야한다. String 값은 받지 않는다.
+
+   // private void drawPath(){        //polyline을 그려주는 메소드
+
+     /*  PolylineOptions options = new PolylineOptions().add(runningMap).width(15).color(Color.BLACK).geodesic(true);
+        polylines.add(mMap.addPolyline(options));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(runningMap, 18));*/
+
+       /* //위치 저장한 값 받아오기
+        sharedPreferences =getSharedPreferences("active_measure",MODE_PRIVATE);
+        String start_position =sharedPreferences.getString("current_position","");
+        String end_position=sharedPreferences.getString("destination_currentPosition","");*/
+
+        /*mMap.addPolyline(new PolylineOptions()
+        .clickable(true)
+        .add(new LatLng(51.5,-0.1),new LatLng(40.7,-74.8))
+        .width(5)
+        .color(Color.RED));*/
+
+       /* polylineOptions =new PolylineOptions();
+        polylineOptions.color(Color.RED);
+        polylineOptions.width(5);
+        polylineOptions.add(new LatLng(51.5,-0.1),new LatLng(40.7,-74.8));
+        mMap.addPolyline(polylineOptions);*/
+
+  //  }
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

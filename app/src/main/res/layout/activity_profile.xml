@@ -25,11 +25,6 @@
             android:layout_gravity="center"/>
     </androidx.appcompat.widget.Toolbar>
 
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="559dp">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,20 +32,20 @@
 
             <ImageView
                 android:id="@+id/imageView_profile"
-                android:layout_width="145dp"
-                android:layout_height="114dp"
+                android:layout_width="136dp"
+                android:layout_height="99dp"
+                android:background="@drawable/imageviewbackground"
                 android:layout_gravity="center"
                 android:layout_marginTop="30dp"
                 android:src="@drawable/profile_1" />
 
 
-
             <TextView
-                android:layout_width="319dp"
+                android:layout_width="333dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:text="*러닝 거리, 페이스, 칼로리 소모량 등 더욱 정확한 결과를 제공하려면 사용자의 신체정보가 필요합니다."
+                android:layout_marginTop="15dp"
+                android:text="*러닝 거리, 페이스, 칼로리 소모량 등 더욱 정확한 결과를 제공받고 싶다면 자신의 신체정보를 입력해주세요."
                 android:textSize="15dp"></TextView>
 
             <LinearLayout
@@ -79,11 +74,11 @@
 
             </LinearLayout>
 
-            <LinearLayout
+           <!-- <LinearLayout
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="15dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -103,6 +98,7 @@
                     android:layout_width="94dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
+                    android:checked="true"
                     android:text="남성" />
 
                 <RadioButton
@@ -113,13 +109,13 @@
                     android:text="여성" />
                 </RadioGroup>
 
-            </LinearLayout>
+            </LinearLayout>-->
 
             <LinearLayout
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="15dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -152,7 +148,7 @@
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="15dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -188,30 +184,32 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
+                android:checked="true"
                 android:text="기본값 사용" />
 
             <TextView
                 android:layout_width="336dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:text="체중과 키를 입력하고 싶지 않은 경우, 기본값 사용을 선택해주세요. 기본값을 바탕으로 러닝기록을 측정합니다."></TextView>
 
             <Button
+                android:id="@+id/button_profile_edit"
                 android:layout_width="147dp"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:onClick="clickMethod_profile_edit"
                 android:background="@drawable/button_background_white"
                 android:text="프로필 편집"></Button>
         </LinearLayout>
-    </ScrollView>
+
 
     <LinearLayout
         android:layout_width="360dp"
         android:layout_height="50dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="35dp"
         android:orientation="horizontal">
 
         <ImageButton

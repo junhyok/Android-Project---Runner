@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,78 +13,103 @@
         android:layout_height="wrap_content"
         android:background="#0E4775"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        >
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <TextView
             android:id="@+id/toolbar_title"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="글 작성"
             android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-            />
+            android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="20dp"
-        android:textStyle="bold"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:text="*사진 추가하기"
         android:textSize="20dp"
-        android:text="*사진 추가하기"></TextView>
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_community_write"></TextView>
 
     <ImageView
         android:id="@+id/imageView_community_write"
-        android:layout_width="match_parent"
-        android:layout_height="239dp"
+        android:layout_width="337dp"
+        android:layout_height="153dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
         app:srcCompat="@android:drawable/ic_menu_gallery" />
 
-    <TextView
+  <!--  <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
         android:layout_marginTop="20dp"
-        android:textStyle="bold"
+        android:text="*내용 작성하기"
         android:textSize="20dp"
-        android:text="*내용 작성하기"></TextView>
-
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_community_write"></TextView>
+-->
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="366dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_gravity="center"
-        >
-    <EditText
-        android:id="@+id/community_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="내용을 입력해주세요."></EditText>
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <EditText
+            android:id="@+id/community_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="내용을 입력해주세요."></EditText>
     </ScrollView>
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:layout_gravity="center"
-        android:orientation="horizontal">
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/toolbar_community_write"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:layout_width="115dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/button_background_white"
             android:gravity="center"
             android:onClick="clickMethod_write_cancel"
-            android:background="@drawable/button_background_white"
             android:text="작성 취소"></Button>
+
         <Button
             android:id="@+id/write_finish"
             android:layout_width="115dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginLeft="40dp"
-            android:onClick="clickMethod_write_finish"
             android:background="@drawable/button_background_white"
+            android:gravity="center"
+            android:onClick="clickMethod_write_finish"
             android:text="작성 완료"></Button>
     </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

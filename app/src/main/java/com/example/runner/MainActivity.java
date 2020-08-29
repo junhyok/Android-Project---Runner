@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,11 +37,12 @@ public class MainActivity extends AppCompatActivity {
 
         signUp=new ArrayList<>();
         myAppService = new MyAppService(); // 내 앱의 서비스 객체 생성
-        myAppData = myAppService.readAllData(this); // 앱 강제로 초기화 하고 싶으면 이 코드 주석하고 실행하기
+
+       /* myAppData = myAppService.readAllData(this); // 앱 강제로 초기화 하고 싶으면 이 코드 주석하고 실행하기
 
         if(myAppData.memberCount==-1){
             myAppData = myAppService.initData(this);
-        }
+        }*/
 
 
 
@@ -68,7 +68,10 @@ public class MainActivity extends AppCompatActivity {
                         signUp.add(new Member(
                                 jsonObject.getString("memberEmail"),
                                 jsonObject.getString("memberPassword"),
-                                jsonObject.getString("memberNickname")
+                                jsonObject.getString("memberNickname"),
+                                jsonObject.getString("uri"),
+                                jsonObject.getString("user_height"),
+                                jsonObject.getString("user_weight")
                         ));
                         if(signUp.get(i).email.equals(inputEmail)){
                             if(signUp.get(i).password.equals(password)) {
@@ -78,21 +81,31 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(MainActivity.this, "로그인 성공했습니다.", Toast.LENGTH_SHORT).show();
 
                                 String user_nickName=signUp.get(i).nickName;    //해당 닉네임 가져오기
+                                String user_password=signUp.get(i).password;    //해당 패스워드 가져오기
+                                String user_email=signUp.get(i).email;    //해당 이메일 가져오기
+                                String user_uri=signUp.get(i).profileImage;    //uri를 String으로 해야할지 uri로 해야할지 감이 잘 안잡힌다.
+                                String user_height=signUp.get(i).user_height;
+                                String user_weight=signUp.get(i).user_weight;
+
                                 SharedPreferences pref=getSharedPreferences("member",MODE_PRIVATE);
                                 SharedPreferences.Editor editor =pref.edit();
+
                                 editor.putString("memberNickname",user_nickName);
+                                editor.putString("memberEmail",user_email);
+                                editor.putString("memberPassword",user_password);
+                                editor.putString("uri", String.valueOf(user_uri));
+                                editor.putString("user_height",user_height);
+                                editor.putString("user_weight",user_weight);
+
                                 editor.commit();
 
-
-                               /* intent.putExtra("memberEmail",inputEmail);  //유저 아이디 넘겨주기
-                                intent.putExtra("memberPassword",password); //유저 비밀번호 넘겨주기
-                                intent.putExtra("memberNickname",nickName);
-                               */ startActivity(intent);
+                                startActivity(intent);
                                 finish();   //로그인 activity finish;
+                                return;
                             }
                         }
                     }   //for문
-                    Toast.makeText(MainActivity.this,"로그인 실패했습니다.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"존재하지 않은 계정이거나 비밀번호가 일치하지 않습니다.",Toast.LENGTH_SHORT).show();
 
                 }catch (JSONException e){
 

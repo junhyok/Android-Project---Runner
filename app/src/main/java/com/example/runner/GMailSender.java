@@ -1,5 +1,11 @@
 package com.example.runner;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,12 +22,16 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 
-public class GMailSender extends javax.mail.Authenticator {
+import static android.content.Context.MODE_PRIVATE;
+
+public class GMailSender extends javax.mail.Authenticator  {
     private String mailhost = "smtp.gmail.com";
     private String user;
     private String password;
     private Session session;
     private String emailCode;
+    static SharedPreferences sharedPreferences_temp;
+    Context context;
 
     public GMailSender(String user, String password) {
         this.user = user;
@@ -37,24 +47,32 @@ public class GMailSender extends javax.mail.Authenticator {
         props.put("mail.smtp.socketFactory.fallback", "false");
         props.setProperty("mail.smtp.quitwait", "false");
 
+       /*  Intent intent = new Intent( context, SearchPassword.class);
+        intent.putExtra("tempPassword",emailCode); //게시글 번호
+        context.startActivity(intent);
+        */
         //구글에서 지원하는 smtp 정보를 받아와 MimeMessage 객체에 전달해준다.
         session = Session.getDefaultInstance(props, this);
     }
 
     public String getEmailCode() {
+
+
         return emailCode;
     } //생성된 이메일 인증코드 반환
 
-    private String createEmailCode() { //이메일 인증코드 생성
+    public String createEmailCode() { //이메일 인증코드 생성
         String[] str = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
                 "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
                 "1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
-        String newCode = new String();
-        for (int x = 0; x < 8; x++) {
+        String newCode = "1234";               /*new String();*/
+       /* for (int x = 0; x < 8; x++) {
             int random = (int) (Math.random() * str.length);
             newCode += str[random];
-        }
+        }*/
+
+
         return newCode;
     }
 

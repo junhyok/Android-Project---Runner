@@ -13,6 +13,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -28,15 +30,33 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Commnunity_write extends AppCompatActivity {
-    ImageView community_image;
-    EditText community_content;
-    Button write_finish;
-
+    ImageView community_image;  //커뮤니티 게시글 이미지 뷰
+    EditText community_content; //게시글 내용
+    Button write_finish;    //작성완료 버튼
+    Community_data community_data;
+    MyAppService myAppService;
     private final int GET_GALLERY_IMAGE = 200;
+    String writeTime;   //작성 시간
+    String memberNickname;//멤버닉네임
+    String profileImage;    //프로필 이미지
+    int likeCount;
+    int ddatgeulCount;
+    String boardImage;  //게시글 이미지
+    Uri selectedImageUri;   //이미지 정보
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +67,29 @@ public class Commnunity_write extends AppCompatActivity {
 
         write_finish=findViewById(R.id.write_finish);   //작성 완료 버튼
 
+        //닉네임
+        SharedPreferences sharedPreferences_member=getSharedPreferences("member",MODE_PRIVATE);
+        memberNickname=sharedPreferences_member.getString("memberNickname","");
+
+        //작성시간
+        final Date currentTime = Calendar.getInstance().getTime();
+        final String date_text=new SimpleDateFormat("yy.MM.dd HH시 mm분", Locale.getDefault()).format(currentTime);
+
+        //프로필 이미지
+        profileImage=sharedPreferences_member.getString("uri","");
+
+        //좋아요 숫자
+        likeCount=0;
+
+        //댓글 숫자
+        ddatgeulCount=0;
+
+
+        //게시글 번호
+        final long epoch = System.currentTimeMillis();
+
+
+        //게시글 작성 완료
         write_finish.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -56,15 +99,28 @@ public class Commnunity_write extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getSharedPreferences("community_item", MODE_PRIVATE);
                 readData = sharedPreferences.getString("community_item", "");
                 if (readData.isEmpty()) {
-
                     // SharedPreferences 생성
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     JSONArray jsonArray = new JSONArray();
                     JSONObject jsonObject = new JSONObject();
                     try {
+                        //게시글 번호
+                        jsonObject.put("boardNo",epoch);
+                        //게시글 내용
                         jsonObject.put("boardContent", community_content.getText().toString());    //글 내용
-                     /*   jsonObject.put("community_image", community_image.getText().toString());    //글 이미지  */
-                       jsonArray.put(jsonObject);
+                        //닉네임
+                        jsonObject.put("memberNickname",memberNickname);
+                        //작성시간
+                        jsonObject.put("writeTime",date_text);
+                        //프로필 이미지
+                        jsonObject.put("profileImage", profileImage);
+                        //게시글 이미지
+                        jsonObject.put("boardImage", selectedImageUri);
+                        //게시글 좋아요 숫자
+                        jsonObject.put("likeCount",likeCount);
+
+
+                        jsonArray.put(jsonObject);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -72,15 +128,27 @@ public class Commnunity_write extends AppCompatActivity {
                     editor.putString("community_item", jsonArray.toString());
                     editor.apply();
                 } else if (!readData.isEmpty()) {
-
                     // SharedPreferences 생성
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     JSONArray jsonArray = null;
                     JSONObject jsonObject = new JSONObject();
                     try {
                         jsonArray = new JSONArray(readData);
-                        jsonObject.put("boardContent", community_content.getText().toString());
-                       /* jsonObject.put("community_image", community_image.getText().toString());*/
+                        //게시글 번호
+                        jsonObject.put("boardNo",epoch);
+                        //게시글 내용
+                        jsonObject.put("boardContent", community_content.getText().toString());    //글 내용
+                        //닉네임
+                        jsonObject.put("memberNickname",memberNickname);
+                        //작성시간
+                        jsonObject.put("writeTime",date_text);
+                        //프로필 이미지
+                        jsonObject.put("profileImage", profileImage);    //프로필 이미지
+                        //게시글 이미지
+                        jsonObject.put("boardImage", selectedImageUri);
+                        //게시글 좋아요 숫자
+                        jsonObject.put("likeCount",likeCount);
+
 
                         jsonArray.put(jsonObject);
 
@@ -122,6 +190,9 @@ public class Commnunity_write extends AppCompatActivity {
         checkSelfPermission();
         community_image=findViewById(R.id.imageView_community_write);
 
+
+
+        //이미지가 들어갈 이미지뷰를 클릭했을 때
         community_image.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -135,6 +206,9 @@ public class Commnunity_write extends AppCompatActivity {
             }
         });
 
+        //사진 보내기
+        Intent intent = new Intent(Commnunity_write.this,Community.class);
+        intent.putExtra("imageUri", String.valueOf(community_image));
 
         //툴바 뒤로가기
         Toolbar toolbar =(Toolbar) findViewById(R.id.toolbar_community_write);
@@ -144,7 +218,27 @@ public class Commnunity_write extends AppCompatActivity {
 
         //왼쪽 버튼 사용 여부 확인 , 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+
+    }   //onCreate
+
+    public void resultOk(String path){
+
+        Intent intent = new Intent();
+        intent.putExtra("downloadPath", path);
+        setResult(RESULT_OK,intent);
+        finish();
     }
+
+    public void resultCanceled(){
+
+        Intent intent = new Intent();
+        setResult(RESULT_CANCELED,intent);
+        finish();
+    }
+
+
+
 
     //화면이 보일 때
     @Override
@@ -206,7 +300,7 @@ public class Commnunity_write extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
-            Uri selectedImageUri = data.getData();
+            selectedImageUri = data.getData();
             community_image.setImageURI(selectedImageUri);
 
 

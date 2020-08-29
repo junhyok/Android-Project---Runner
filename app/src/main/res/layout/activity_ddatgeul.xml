@@ -46,6 +46,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
+                    android:id="@+id/community_profileImage"
                     android:layout_width="49dp"
                     android:layout_height="42dp"
                     android:src="@drawable/profile"></ImageView>
@@ -56,6 +57,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/community_writeNickname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
@@ -64,34 +66,36 @@
                         android:textStyle="bold"></TextView>
 
                     <TextView
+                        android:id="@+id/community_writeTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2020/01/01  12시 10분"></TextView>
+                        android:text="2020/08/17  12시 10분"></TextView>
 
                 </LinearLayout>
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/community_enter_image"
                 android:layout_width="match_parent"
                 android:layout_height="224dp"
                 android:scaleType="centerCrop"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/ic_launcher_foreground"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
             <TextView
-                android:id="@+id/ddatgeul_content"
+                android:id="@+id/community_enter_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="8dp"
                 android:text="오늘 3km 띄었다!"
                 android:textSize="18dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView"></TextView>
+                app:layout_constraintTop_toBottomOf="@+id/community_enter_image"></TextView>
 
-            <LinearLayout
+           <!-- <LinearLayout
                 android:id="@+id/linearLayout_good"
                 android:layout_width="103dp"
                 android:layout_height="35dp"
@@ -112,12 +116,12 @@
                     android:layout_width="49dp"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="3"
+                    android:text="0"
                     android:textColor="#000000"
                     android:textSize="18dp"
                     android:textStyle="bold"></TextView>
             </LinearLayout>
-
+-->
             <View
                 android:id="@+id/view"
                 android:layout_width="match_parent"
@@ -125,7 +129,7 @@
                 android:background="#000000"
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout_good"/>
+                app:layout_constraintTop_toBottomOf="@+id/community_enter_content"/>
 
             <LinearLayout
                 android:id="@+id/fullboard_linear"

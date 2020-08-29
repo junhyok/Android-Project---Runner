@@ -12,6 +12,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -128,6 +129,17 @@ public class Active extends AppCompatActivity implements OnMapReadyCallback,
             public void onClick(View v) {
                 //런닝 측정 창으로 화면전환
                 Intent intent = new Intent(getApplicationContext(), Running_measure.class);
+
+                //현재위치 데이터 저장하기
+                SharedPreferences sharedPreferences = getSharedPreferences("active_measure", MODE_PRIVATE);
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                String current_position = String.valueOf(currentPosition).substring( String.valueOf(currentPosition).lastIndexOf(":") + 2);  //현재 위치 정보 받기
+
+                editor.putString("current_position", current_position);
+
+                editor.commit();
+
                 startActivity(intent);
             }
         });

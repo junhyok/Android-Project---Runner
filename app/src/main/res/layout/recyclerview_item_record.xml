@@ -24,16 +24,16 @@
                 android:id="@+id/running_today"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
+                android:layout_marginLeft="35dp"
                 android:layout_marginTop="20dp"
-                android:text="2020.01.01"
+                android:text="2020.08.20"
                 android:textSize="20dp"
                 android:textStyle="bold"></TextView>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
+                android:layout_gravity="center"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal">
 
@@ -74,7 +74,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
+               android:layout_gravity="center"
                 android:layout_marginTop="15dp"
 
                 android:orientation="horizontal">
@@ -98,7 +98,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="100dp"
                     android:text="칼로리"
                     android:textColor="#000000"
                     android:textSize="18dp"
@@ -114,11 +114,16 @@
             </LinearLayout>
 
 
-            <ImageView
+          <!--  <ImageView
                 android:id="@+id/running_map"
                 android:layout_width="match_parent"
-                android:layout_height="216dp"
-                android:src="@drawable/map"></ImageView>
+                android:layout_height="197dp"
+                android:src="@drawable/map"></ImageView>-->
+            <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_marginTop="5dp"
+            android:background="#A39D9D"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
