@@ -38,7 +38,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyARwePzFqe0NX5baNZHxdndoDPwgy6W5fs" />
+            android:value="" />
 
         <activity android:name=".Password_edit" />
         <activity android:name=".Profile_edit" />
